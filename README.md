@@ -1,3 +1,3 @@
 ## Songkicker
 
-### Find concerts of my favorite artists without being limited by my tracked locations.
+Find concerts of my favorite artists without being limited by my tracked locations.
