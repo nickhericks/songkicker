@@ -26,7 +26,11 @@ printEvents = () => {
 		if(artist.events !== undefined) {
 			artist.events.forEach(event => {
 				// List artists on page
-				eventsUl.innerHTML += `<li>${event.displayName}</li>`;
+				eventsUl.innerHTML += `
+					<li>
+						${artist.name} ----- ${event.venue.metroArea.displayName} ----- ${event.displayName}
+					</li>
+				`;
 			});
 
 
