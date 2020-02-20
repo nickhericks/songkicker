@@ -39,15 +39,13 @@ printEvents = () => {
 
 
 getMoreEvents = (artistId, pageNumber) => {
-	let events = [];
-
 	fetch(
 		`https://api.songkick.com/api/3.0/artists/${artistId}/calendar.json?apikey=WsvDSgM98wiuOncG&page=${pageNumber}`
 	)
 		.then(response => response.json())
 		.then(data => { 
 			events = data.resultsPage.results.event;
-			console.log(events);
+			// console.log(events);
 
 			// Find artist
 			let popularArtist = trackedArtists.find(artist => artist.id == artistId);
@@ -57,11 +55,7 @@ getMoreEvents = (artistId, pageNumber) => {
 			events.forEach(event => {
 				popularArtist.events.push(event);
 			});
-
 		});
-
-		// console.log(events);
-	return events;
 };
 
 
@@ -85,20 +79,20 @@ getEvents = () => {
 					// console.log(artist);
 				}
 
-				// Create further event collection for artists with more than 50 events
-				// Example KT Tunstall has 109 events		id:			150590
+				// Only 50 events are returned per request
 				// Send additional fetch requests for other events
+				// Example KT Tunstall has 109 events		id:	150590
 				else if (data.resultsPage.totalEntries > 50) {
 					let totalEvents = data.resultsPage.totalEntries;
-					let totalPages = Math.ceil(totalEvents / 50);
-
-					artist.events = data.resultsPage.results.event;
 
 					// Find out how many pages there are.
+					let totalPages = Math.ceil(totalEvents / 50);
+
+					// Add first 50 events to artist object
+					artist.events = data.resultsPage.results.event;
+
 					// Loop through totalPages until done
 					for(var i = 2; i <= totalPages; i++) {
-						
-						// Function takes artist id and page number as input and returns events
 						getMoreEvents(artist.id, i);
 					}
 
