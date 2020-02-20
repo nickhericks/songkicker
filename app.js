@@ -11,7 +11,7 @@ printArtists = () => {
 	// For each artist in array
 	trackedArtists.forEach(artist => {
 		// List artists on page
-		artistUl.innerHTML += `<li>${artist.displayName}</li>`;
+		artistUl.innerHTML += `<li>${artist.name}</li>`;
 
 		// Use artist list to get events for each artist
 		// getArtistEvents(artist.id);
@@ -19,59 +19,23 @@ printArtists = () => {
 };
 
 
+printEvents = () => {
+	// For each artist in array
+	trackedArtists.forEach(artist => {
 
-// Get all events for artist
-// getArtistEvents = query => {
-// 	fetch(`https://api.songkick.com/api/3.0/artists/${query}/calendar.json?apikey=WsvDSgM98wiuOncG`
-// 	)
-//     .then(response => response.json())
-//     .then(data => {
-// 			// console.log(data.resultsPage.results.event);
-// 			let eventArray = data.resultsPage.results.event;
-// 			//  If .event is not == 'undefined', then add it to the allArtistEvents array
-// 			if (eventArray !== undefined) {
-//         // TODO: Change this to not add .event but to instead merge the items in that .event array into the allArtistEvents array
-// 				eventArray.forEach(event => {
-// 	        allArtistEvents.push(event);
-// 				});
-//       }
-// 		})
-// 		.then( () => {
-
-// 			allArtistEvents.forEach(event => {
-// 				eventsUl.innerHTML += `<li>${event.displayName}</li>`;
-				
-
-// 			});
-// 		})
-// 		// .catch(error => console.log("Error fetching or parsing data", error));
-// };
+		if(artist.events !== undefined) {
+			artist.events.forEach(event => {
+				// List artists on page
+				eventsUl.innerHTML += `<li>${event.displayName}</li>`;
+			});
 
 
+			// Use artist list to get events for each artist
+			// getArtistEvents(artist.id);
+		}
+	});
+};
 
-
-
-// getArtistEvents = artistId => {
-// 	fetch(`https://api.songkick.com/api/3.0/artists/${artistId}/calendar.json?apikey=WsvDSgM98wiuOncG`
-// 	)
-// 		.then(response => response.json())
-// 		.then(data => {
-
-// 			let eventArray = [];
-// 			// let eventData = data.resultsPage.results.event;
-// 			console.log(data.resultsPage.results.event);
-
-// 			if (data.resultsPage.results.event !== undefined) {
-// 				data.resultsPage.results.event.forEach(event => {
-// 					eventArray.push(event);
-// 				});
-// 			}
-// 			console.log(eventArray);
-
-// 			return eventArray;
-// 		});
-// 	// .catch(error => console.log("Error fetching or parsing data", error));
-// };
 
 
 getMoreEvents = (artistId, pageNumber) => {
@@ -95,10 +59,9 @@ getMoreEvents = (artistId, pageNumber) => {
 			});
 
 		});
-			// console.log(events);
 
+		// console.log(events);
 	return events;
-
 };
 
 
@@ -131,54 +94,19 @@ getEvents = () => {
 
 					artist.events = data.resultsPage.results.event;
 
-					
 					// Find out how many pages there are.
 					// Loop through totalPages until done
 					for(var i = 2; i <= totalPages; i++) {
 						
 						// Function takes artist id and page number as input and returns events
 						getMoreEvents(artist.id, i);
-
 					}
 
-					
-					
-					
-					
-					
-
-
-
-					console.log(totalEvents);
-					console.log(totalPages);
-
-					console.log(data);
-					console.log(artist);
-
-					artist.events = data.resultsPage.results.event;
-
-
-
-
-
-
-					// fetch()
-					// 	.then(response => response.json())
-					// 	.then(data => {
-
-					// 	})
-
-
-
 				}
-
-
 			});
-
-
-
 	});
 
+	console.log(trackedArtists);
 
 };
 
@@ -191,7 +119,7 @@ getTrackedArtists = query => {
 	)
 		.then(response => response.json())
 		.then(data => {
-			console.log(data.resultsPage.results.artist);
+			// console.log(data.resultsPage.results.artist);
 			console.log(data.resultsPage.results.artist.length);
 
 			data.resultsPage.results.artist.forEach(artist => {
