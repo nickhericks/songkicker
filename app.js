@@ -20,6 +20,7 @@ let artistUl = document.querySelector('#artists');
 removeNotPlayingArtists = () => {
 	trackedArtists = trackedArtists.filter(artist => artist.events !== undefined);
 	console.log(trackedArtists);
+	console.log('non-playing artists complete');
 };
 
 
@@ -94,14 +95,17 @@ const getEvents = async () => {
 					// Find out how many pages there are.
 					let totalPages = Math.ceil(totalEvents / 50);
 
+					artist.totalEvents = totalEvents;
+					artist.totalPages = totalPages;
+
 					// Add first 50 events to artist object
 					artist.events = data.resultsPage.results.event;
 
-					// Loop through totalPages until done
-					for(var i = 2; i <= totalPages; i++) {
-						await getMoreEvents(artist.id, i);
-						console.log(`Running MoreEvents for ${artist.id} ${artist.name}`);
-					}
+					// // Loop through totalPages until done
+					// for(var i = 2; i <= totalPages; i++) {
+					// 	await getMoreEvents(artist.id, i);
+					// 	console.log(`Running MoreEvents for ${artist.id} ${artist.name}`);
+					// }
 
 				}
 			});
@@ -150,7 +154,12 @@ const runProgram = async () => {
 	console.log('confirmed artist list complete');
 	await getEvents();
 	console.log('confirmed event list complete');
-	// await removeNotPlayingArtists();
+	await removeNotPlayingArtists();
+	console.log('confirmed remove non-playing artists complete');
+
+	
+
+
 // TODO: All the async/awaits in the functions in this file may not be necessary. Can't figure out how to get these all to wait until the moreEvents function has completed running and all events are in before we print events to the page.
 // Still need to figure out async/await and/or chaining promises
 
