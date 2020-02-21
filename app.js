@@ -1,22 +1,27 @@
 
 let user = 'nhericks';
 let trackedArtists = [];
-let allArtistEvents = [];
 
 let eventsUl = document.querySelector('#events');
 let artistUl = document.querySelector('#artists');
 
 
-printArtists = () => {
-	// For each artist in array
-	trackedArtists.forEach(artist => {
-		// List artists on page
-		artistUl.innerHTML += `<li>${artist.name}</li>`;
+// printArtists = () => {
+// 	// For each artist in array
+// 	trackedArtists.forEach(artist => {
+// 		// List artists on page
+// 		artistUl.innerHTML += `<li>${artist.name}</li>`;
 
-		// Use artist list to get events for each artist
-		// getArtistEvents(artist.id);
-	});
+// 		// Use artist list to get events for each artist
+// 		// getArtistEvents(artist.id);
+// 	});
+// };
+
+removeNotPlayingArtists = () => {
+	trackedArtists = trackedArtists.filter(artist => artist.events !== undefined);
+	console.log(trackedArtists);
 };
+
 
 
 printEvents = () => {
@@ -33,9 +38,6 @@ printEvents = () => {
 				`;
 			});
 
-
-			// Use artist list to get events for each artist
-			// getArtistEvents(artist.id);
 		}
 	});
 	console.log('printEvents completed');
@@ -145,12 +147,17 @@ let artistPromise = new Promise(function(resolve, reject) {
 
 const runProgram = async () => {
 	await getTrackedArtists(user);
+	console.log('confirmed artist list complete');
 	await getEvents();
+	console.log('confirmed event list complete');
+	// await removeNotPlayingArtists();
 // TODO: All the async/awaits in the functions in this file may not be necessary. Can't figure out how to get these all to wait until the moreEvents function has completed running and all events are in before we print events to the page.
 // Still need to figure out async/await and/or chaining promises
 
 	// TODO: why isnt this printing?
 	await printEvents();
+	console.log("confirmed printEvents complete");
+	
 	console.log('runProgram completed');
 
 
