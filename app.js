@@ -38,12 +38,12 @@ printEvents = () => {
 			// getArtistEvents(artist.id);
 		}
 	});
+	console.log('printEvents completed');
 };
 
 
-
-getMoreEvents = (artistId, pageNumber) => {
-	fetch(
+const getMoreEvents = async (artistId, pageNumber) => {
+	await fetch(
 		`https://api.songkick.com/api/3.0/artists/${artistId}/calendar.json?apikey=WsvDSgM98wiuOncG&page=${pageNumber}`
 	)
 		.then(response => response.json())
@@ -60,20 +60,20 @@ getMoreEvents = (artistId, pageNumber) => {
 				popularArtist.events.push(event);
 			});
 		});
+	console.log(`Completed MoreEvents for ${artistId}`);
 };
 
 
 
-
-getEvents = () => {
-	trackedArtists.forEach(artist => {
+const getEvents = async () => {
+	await trackedArtists.forEach( artist => {
 		// console.log(artist);
 
 		fetch(
 			`https://api.songkick.com/api/3.0/artists/${artist.id}/calendar.json?apikey=WsvDSgM98wiuOncG`
 		)
 			.then(response => response.json())
-			.then(data => {
+			.then( async (data) => {
 
 				if (data.resultsPage.totalEntries > 0 
 						&& data.resultsPage.totalEntries < 50) {
@@ -97,7 +97,8 @@ getEvents = () => {
 
 					// Loop through totalPages until done
 					for(var i = 2; i <= totalPages; i++) {
-						getMoreEvents(artist.id, i);
+						await getMoreEvents(artist.id, i);
+						console.log(`Running MoreEvents for ${artist.id} ${artist.name}`);
 					}
 
 				}
@@ -105,51 +106,52 @@ getEvents = () => {
 	});
 
 	console.log(trackedArtists);
+	console.log("getEvents completed");
 
 };
 
 
 
 // Get all user's tracked artists
-getTrackedArtists = query => {
-	fetch(
+const getTrackedArtists = async (query) => {
+	await fetch(
 		`https://api.songkick.com/api/3.0/users/${query}/artists/tracked.json?apikey=WsvDSgM98wiuOncG&per_page=all`
 	)
 		.then(response => response.json())
 		.then(data => {
-			// console.log(data.resultsPage.results.artist);
+
 			console.log(data.resultsPage.results.artist.length);
 
 			data.resultsPage.results.artist.forEach(artist => {
 				let artistObject = {};
 				artistObject.id = artist.id;
 				artistObject.name = artist.displayName;
-				// console.log(artistObject.id);
-
-				// artistObject.events = getArtistEvents(artist.id);
-
 
 				trackedArtists.push(artistObject);
-
 			});
+
+			console.log("getTrackedArtists completed");
+
 		})
 		.catch(error => console.log('Error fetching or parsing data', error));
 };
 
 
 
-/*  
-Get all artists and assign to variable
 
-Within all artists array, for each artist in array
-	- pull their events
-	- add to artist object within all artists array
+let artistPromise = new Promise(function(resolve, reject) {
+
+});
+
+const runProgram = async () => {
+	await getTrackedArtists(user);
+	await getEvents();
+// TODO: All the async/awaits in the functions in this file may not be necessary. Can't figure out how to get these all to wait until the moreEvents function has completed running and all events are in before we print events to the page.
+// Still need to figure out async/await and/or chaining promises
+
+	// TODO: why isnt this printing?
+	await printEvents();
+	console.log('runProgram completed');
 
 
-Get all events and assign to variable
-
-Push button to print all artists
-Push button to print all events
-
-
-*/
+}
